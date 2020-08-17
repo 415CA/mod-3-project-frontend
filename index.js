@@ -4,9 +4,9 @@
 const BASE_URL = 'http://localhost:3000';
 const BOOK_PATH = '/books';
 const USER_PATH = '/users';
-const LIBRARY_PATH = '/libraries';
+const ANNOTATION_PATH = '/annotations';
 
-// ---------------- 3rd Party API URL 
+// ---------------- 3rd Party API URL
 const GOOGLE_BOOKS_API = `https://www.googleapis.com/books/v1/volumes?q=`;
 const googleQuery = (userInput) => {
   return userInput.split(' ').join('%20');
@@ -14,26 +14,29 @@ const googleQuery = (userInput) => {
 
 // ---------------- FORMS ---------------- //
 
+// ---------------- Login
+const loginForm = document.querySelector('#login-user-form');
+
 // ---------------- Create
 const createUserForm = document.querySelector('#create-user-form');
 const createBookForm = document.querySelector('#create-book-form');
-const createLibraryForm = document.querySelector('#create-library-form');
+const createAnnotationForm = document.querySelector('#create-annotation-form');
 
 // ---------------- Update
 const updateProgressForm = document.querySelector('#update-progress-form');
 const progressBar = document.querySelector('progress-bar');
 
 // ---------------- Search
-const librarySearchForm = document.querySelector('#library-search');
+const annotationSearchForm = document.querySelector('#annotation-search');
 const googleBooksSearchForm = document.querySelector('#google-book-search');
 
 // ---------------- FETCH GET METHODS ---------------- //
 
 // ---------------- Users
-const fetchUser = () => {
+const fetchUser = (user) => {
   fetch(`${BASE_URL}${USER_PATH}/${user.id}`)
     .then((response) => response.json())
-    .then((userArray) => console.log(userArray));
+    .then((user) => console.log(user));
 };
 
 // ---------------- Books
@@ -43,18 +46,22 @@ const fetchBooks = () => {
     .then((bookArray) => console.log(bookArray));
 };
 
-// ---------------- Libraries
-const fetchLibrary = () => {
+// ---------------- Annotations
+const fetchAnnotation = () => {
   fetch(`${BASE_URL}${LIBRARY_PATH}`)
     .then((response) => response.json())
-    .then((libraryArray) => console.log(libraryArray));
+    .then((annotationArray) => console.log(annotationArray));
 };
 
 // ---------------- Google Books API
 const fetchGoogleBooks = (searchValue) => {
   fetch(`${GOOGLE_BOOKS_API}{${searchValue}}`)
     .then((response) => response.json())
-    .then((googleBooks) => console.log(googleBooks));
+    .then((googleBooks) => {
+      debugger
+      console.log(googleBooks);
+      googleBooks.forEach((book) => console.log(book));
+    });
 };
 
 // ---------------- FETCH CREATE METHODS ---------------- //
@@ -81,15 +88,15 @@ const postBook = (attributes) => {
     .then((newBook) => console.log(newBook));
 };
 
-// ---------------- Create Library
-const postLibrary = (attributes) => {
+// ---------------- Create Annotation
+const postAnnotation = (attributes) => {
   fetch(`${BASE_URL}${LIBRARY_PATH}`, {
     method: 'POST',
     headers: { 'Content-type': 'Application/json' },
     body: JSON.stringify(attributes),
   })
     .then((response) => response.json())
-    .then((newLibrary) => console.log(newLibrary));
+    .then((newAnnotation) => console.log(newAnnotation));
 };
 
 // ---------------- FETCH UPDATE METHODS ----------------  //
@@ -116,15 +123,15 @@ const patchBook = (attributes) => {
     .then((book) => console.log(book));
 };
 
-// ---------------- Update Library
-const patchLibrary = (attributes) => {
-  fetch(`${BASE_URL}${LIBRARY_PATH}/${library.id}`, {
+// ---------------- Update Annotation
+const patchAnnotation = (attributes) => {
+  fetch(`${BASE_URL}${LIBRARY_PATH}/${annotation.id}`, {
     method: 'PATCH',
     headers: { 'Content-type': 'Application/json' },
     body: JSON.stringify(attributes),
   })
     .then((response) => response.json())
-    .then((library) => console.log(library));
+    .then((annotation) => console.log(annotation));
 };
 
 // ---------------- FETCH DELETE METHODS ----------------  //
@@ -151,9 +158,9 @@ const deleteBook = () => {
     });
 };
 
-// ---------------- Delete Library
-const deleteLibrary = () => {
-  fetch(`${BASE_URL}${LIBRARY_PATH}${library.id}`, {
+// ---------------- Delete Annotation
+const deleteAnnotation = () => {
+  fetch(`${BASE_URL}${LIBRARY_PATH}${annotation.id}`, {
     method: 'DELETE',
   })
     .then((response) => response.json())
@@ -166,7 +173,7 @@ const deleteLibrary = () => {
 
 // ---------------- Login ---------------- //
 
-const loginForm.addEventListener = (event) => {
+loginForm.addEventListener = (event) => {
   event.preventDefault();
 
   const username = event.target.username.value;
@@ -185,25 +192,37 @@ const loginForm.addEventListener = (event) => {
     .then((response) => response.json())
     .then((user) => {
       if (user.id) {
-        displayUser(user)
+        displayUser(user);
       } else {
-        console.log(user)
+        console.log(user);
       }
     });
 };
 
 // ---------------- Search Forms ---------------- //
 
-// ---------------- Library Search Form
-librarySearchForm.addEventListener('submit', (event) => {
+// ---------------- Annotation Search Form
+annotationSearchForm.addEventListener('submit', (event) => {
   const searchValue = event.target.search.value;
-  fetchLibrary(searchValue);
+  fetchAnnotation(searchValue);
 });
 
 // ---------------- Google Books Search Form
 googleBooksSearchForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
   const searchValue = googleQuery(event.target.search.value);
-  fetchGoogleBooks(searchValue);
+  // return fetchGoogleBooks(searchValue);
+  fetch(`${GOOGLE_BOOKS_API}{${searchValue}}`)
+    .then((response) => response.json())
+    .then((googleBooks) => {
+      console.log(googleBooks);
+      debugger
+      googleBooks.items.forEach((item) => console.log(item.volumeInfo.title));
+      // googleBooks.forEach((item) => {
+      //   console.log(item.title);
+      // })
+    });
 });
 
 // ---------------- Create Forms ---------------- //
@@ -232,23 +251,23 @@ createBookForm.addEventListener('submit', (event) => {
   postBook(attributes);
 });
 
-// ---------------- Create Library Form
-createLibraryForm.addEventListener('submit', (event) => {
-  event.preventDefault();
+// ---------------- Create Annotation Form
+// createAnnotationForm.addEventListener('submit', (event) => {
+//   event.preventDefault();
 
-  const attributes = {
-    user_id: event.target['user-id'].value,
-    book_id: event.target['book-id'].value,
-    page: event.target.page.value,
-    progress: event.target.progress.value,
-  };
+//   const attributes = {
+//     user_id: event.target['user-id'].value,
+//     book_id: event.target['book-id'].value,
+//     page: event.target.page.value,
+//     progress: event.target.progress.value,
+//   };
 
-  postLibrary(attributes);
-});
+//   postAnnotation(attributes);
+// });
 
 // ---------------- Update Forms ---------------- //
 
-// ---------------- Update Library Form
+// ---------------- Update Annotation Form
 updateProgressForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
@@ -262,8 +281,8 @@ updateProgressForm.addEventListener('submit', (event) => {
     progress: currentProgress,
   };
 
-  patchLibrary(attributes);
-  library.page.push(pageEntry);
+  patchAnnotation(attributes);
+  annotation.page.push(pageEntry);
   updateProgressBar(book, event.target.progress.value);
 });
 
