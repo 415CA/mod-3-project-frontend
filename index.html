@@ -9,125 +9,100 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+  
   <title>Read</title>
 </head>
 
 <body>
 <!-- NavBar -->
   <nav class="navbar navbar-light bg-light justify-content-between">
-    <a class="navbar-brand">Navbar</a>
+    <a class="navbar-brand">Read</a>
+    <form class="form-inline" id="login-user-form">
+      <label class="sr-only" for="email">Email</label>
+      <input type="text" class="form-control mb-2 mr-sm-2" id="email" placeholder="Email">
+    
+      <label class="sr-only" for="username">Username</label>
+      <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">@</div>
+        </div>
+        <input type="text" class="form-control" id="username" placeholder="Username">
+      </div>
+      <button type="submit" class="btn btn-primary mb-2">Submit</button>
+    </form>
+
     <form class="form-inline" id="google-book-search">
       <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
   </nav>
 
-<!-- Login User -->
-  <h5>Login</h5>
-  <form class="form-inline" id="login-user-form">
-    <input class="form-control mr-sm-2" name="login-user-form" type="search" placeholder="Login" aria-label="Login">
-    <button class="btn btn-info" name="login" type="submit">Search</button>
-  </form>
-
-<!-- Library Search -->
-  <h5>Search My Library</h5>
-  <form class="form-inline" id="annotation-search">
-    <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-info" name="search" type="submit">Search</button>
-  </form>
-
-<!--Create Book Form-->
-  <h5>Add A Book</h5>
-  <form id="create-book-form"> 
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="inputTitle">Title</label>
-        <input type="title" name="title" class="form-control" id="inputTitle" placeholder="Title">
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="sidebar-sticky pt-3">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">
+              <span data-feather="home"></span>
+              Library <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file"></span>
+              In-Progress
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="shopping-cart"></span>
+              Queue
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="users"></span>
+              Completed
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="bar-chart-2"></span>
+              Annotations
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="layers"></span>
+              Search
+            </a>
+          </li>
+        </ul>
       </div>
-      <div class="form-group col-md-6">
-        <label for="inputAuthor">Author</label>
-        <input type="author" name="author" class="form-control" id="inputAuthor" placeholder="Author">
+    </nav>
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Dashboard</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="inputDescription">Description</label>
-      <input type="text" name="description" class="form-control" id="inputDescription" placeholder="Description">
-    </div>
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="inputImage">Image</label>
-        <input type="text" name="image" class="form-control" id="inputImage">
+
+      <div class="container-fluid" id="dashboard">
+        Dashboard Div
       </div>
-      <div class="form-group col-md-4">
-        <label for="inputPageCount">Page Count</label>
-        <input type="text" name="pages" class="form-control" id="inputPageCount" placeholder="Page Count">
+
+      <div class="container-fluid" id="form">
       </div>
-      <div class="form-group col-md-2">
-        <label for="inputInfoLink">Info Link</label>
-        <input type="text" name="link" class="form-control" id="inputInfoLink">
-      </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
-
-<!--Create User -->
-  <h5>Create Account</h5>
-  <form class="form-inline" id="create-user-form">
-    <label class="sr-only" for="create-user-form-email">Email</label>
-    <input type="text" name="email" class="form-control mb-2 mr-sm-2" id="create-user-form-email" placeholder="Email">
-
-    <label class="sr-only" for="create-user-form-username">Username</label>
-    <div class="input-group mb-2 mr-sm-2">
-      <div class="input-group-prepend">
-        <div class="input-group-text">@</div>
-      </div>
-      <input type="text" name="username" class="form-control" id="create-user-form-username" placeholder="Username">
-    </div>
-
-    <div class="form-check mb-2 mr-sm-2">
-      <input class="form-check-input" type="checkbox" id="inlineFormCheck">
-      <label class="form-check-label" for="inlineFormCheck">
-        Remember me
-      </label>
-    </div>
-
-    <button type="submit" class="btn btn-primary mb-2">Submit</button>
-  </form>
-
-  <!-- Update Progress
-  <h5>Add To Library</h5>
-  <div class="card" style="width: 18rem;" id="create-annotation-form">
-    <img class="card-img-top" src="..." alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.
-      </p>
-      <button type="submit" class="btn btn-primary mb-2">Submit</button>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
-  </div> -->
 
 
-  <!--Update Progress -->
-  <h5>Progress</h5>
-  <div class="progress" style="height: 20px;">
-    <div class="progress-bar progress-bar-striped bg-info" id="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
-      aria-valuemax="100">25%</div>
+    </main>
   </div>
-  <form id="update-progress-form">
-    <div class="form-group">
-      <label for="page">Current Page</label>
-      <input type="text" name="page" class="form-control" id="page" placeholder="Current Page">
-    </div>
-    <div class="form-group">
-      <label for="name="page"">Comments</label>
-      <textarea class="form-control" name="comments" id="name="page"" rows="3"></textarea>
-    </div>
-  </form>
+</div>
 
   <!-- Optional JavaScript -->
-  <script src="index.js" async defer ></script>
+  <script src="index.js" async defer></script>
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
