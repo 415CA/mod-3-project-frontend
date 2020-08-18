@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+  <title>ReadMe</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<!-- Book Cover Image Styling (I think?) -->
+  <style> 
+    .fakeimg {
+      height: 200px;
+      background: #aaa;
+    }
+    </style>
+</head>
+
+<body>
+    <!-- NavBar -->
+  <nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <span class="navbar-brand mb-0 h1">ReadMe</span>
+        </div>
+    <ul class="nav navbar-nav navbar-right">
+        <button type="button" class="btn btn-default navbar-btn"> Sign In </button>
+    </ul>
+    </div>
+  </nav>
+<!-- Search a Book -->
+  <div class="panel-group">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" href="#collapse1">Add A Book</a>
+        </h4>
+    </div>
+    <div id="collapse1" class="panel-collapse collapse">
+        <form class="form-inline" id="login-user-form">
+            <div class="form-group">
+                <label for="title">Book Title:</label>
+                <input type="text" class="form-control" id="book_title">
+              </div>
+              <div class="form-group">
+                <label for="author">Author:</label>
+                <input type="text" class="form-control" id="book_author">
+              </div>  
+              <button type="submit" class="btn btn-default">Search</button>
+        </form> 
+<!-- Add JS to show results when Search button is clicked --> 
+    </div>
+  </div>
+<!-- Main Body -->
+  <div class="container-fluid" style="margin-top:10px">
+    <div class="row">
+<!-- Side Bar -->
+    <div class="col-sm-2" id="collection_sidebar"> 
+        <ul class="list-group" id="currently_reading">
+            <h5>Currently Reading</h5>
+        </ul>
+        <ul class="list-group" id="queue">
+            <h5>Queue</h5>
+        </ul>
+        <ul class="list-group" id="queue">
+            <h5>Finished Reading</h5>    
+        </ul>
+    </div>
+<!-- Section for Annotation Form -->
+    <div class="col-sm-5" id="classrooms">
+        Annotation Form
+        <div class="fakeimg" id="book_image">Book Cover</div>
+        <h5>Book Title</h5>
+        <h6>Author</h6>
+        <div class="form-group">
+            <label for="page_number">Page Number:</label>
+            <input type="text" class="form-control" placeholder="Enter Page Number" id="page_number">
+          </div>
+          <div class="form-group">
+            <label for="comment">Comment:</label>
+            <textarea class="form-control" rows="5" placeholder="Enter Notes Here" id="comment"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>   
+    </div>
+<!-- Section for Progress Bar and Annotation Feed -->
+    <div class="col-sm-5" id="grade_table">
+        Progress Bar & Activity Feed
+        <div class="fakeimg" id="book_image">Book Cover</div>
+        <h5>Book Title</h5>
+        <h6>Author</h6>
+        <h5>Reading Progress</h5>
+        <div class="progress">
+            <div class="progress-bar" id="progress bar" style="width:25%">25%</div>
+        </div>
+        <h5>Activity Feed</h5>
+          <div class="p-3 bg-white mt-2 rounded">
+            <div class="d-flex justify-content-between" id="activity_feed">
+                <div class="comment-text text-justify mt-2">
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                </div>
+                <div class="d-flex justify-content-end align-items-center comment-buttons mt-2 text-right"><span class="mr-3 delete">Delete</span><button class="btn btn-success btn-sm border-0 px-3" type="button">Edit</button></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
