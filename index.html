@@ -1,143 +1,101 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <!-- Required meta tags -->
+    <!-- Required meta tags -->
+  <title>ReadMe</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-  <title>Read</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-<!-- NavBar -->
-  <nav class="navbar navbar-light bg-light justify-content-between">
-    <a class="navbar-brand">Navbar</a>
-    <form class="form-inline" id="google-book-search">
-      <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+    <!-- NavBar For Sign In -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+      </div>
+      <div class="mx-auto order-0">
+          <a class="navbar-brand navbar-expand-md" href="#">ReadMe</a>
+      </div>
+      <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+          <ul class="nav navbar-nav navbar-right">
+              <button type="button" class="btn btn-default navbar-btn" id="sign_in_button"> Sign In </button>
+          </ul>
+      </div>
   </nav>
-
-<!-- Login User -->
-  <h5>Login</h5>
-  <form class="form-inline" id="login-user-form">
-    <input class="form-control mr-sm-2" name="login-user-form" type="search" placeholder="Login" aria-label="Login">
-    <button class="btn btn-info" name="login" type="submit">Search</button>
-  </form>
-
-<!-- Library Search -->
-  <h5>Search My Library</h5>
-  <form class="form-inline" id="annotation-search">
-    <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-info" name="search" type="submit">Search</button>
-  </form>
-
-<!--Create Book Form-->
-  <h5>Add A Book</h5>
-  <form id="create-book-form"> 
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="inputTitle">Title</label>
-        <input type="title" name="title" class="form-control" id="inputTitle" placeholder="Title">
-      </div>
-      <div class="form-group col-md-6">
-        <label for="inputAuthor">Author</label>
-        <input type="author" name="author" class="form-control" id="inputAuthor" placeholder="Author">
-      </div>
+<!-- Search a Book -->
+  <div class="panel-group">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" href="#collapse1">Add A Book</a>
+        </h4>
     </div>
-    <div class="form-group">
-      <label for="inputDescription">Description</label>
-      <input type="text" name="description" class="form-control" id="inputDescription" placeholder="Description">
+    <div id="collapse1" class="panel-collapse collapse cborder">
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="book">Search Book</label>
+                <input type="text" class="form-control" placeholder="Book Title and Author" id="book_search">
+              </div> 
+              <button type="submit" class="btn btn-default" id="search_button">Search</button>
+        </form>
+        <ul class="list-group list-group-flush" id="book_search_results">
+<!----------------- Add JS to show results when Search button is clicked -----------------> 
+        </ul> 
     </div>
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label for="inputImage">Image</label>
-        <input type="text" name="image" class="form-control" id="inputImage">
-      </div>
-      <div class="form-group col-md-4">
-        <label for="inputPageCount">Page Count</label>
-        <input type="text" name="pages" class="form-control" id="inputPageCount" placeholder="Page Count">
-      </div>
-      <div class="form-group col-md-2">
-        <label for="inputInfoLink">Info Link</label>
-        <input type="text" name="link" class="form-control" id="inputInfoLink">
-      </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
-
-<!--Create User -->
-  <h5>Create Account</h5>
-  <form class="form-inline" id="create-user-form">
-    <label class="sr-only" for="create-user-form-email">Email</label>
-    <input type="text" name="email" class="form-control mb-2 mr-sm-2" id="create-user-form-email" placeholder="Email">
-
-    <label class="sr-only" for="create-user-form-username">Username</label>
-    <div class="input-group mb-2 mr-sm-2">
-      <div class="input-group-prepend">
-        <div class="input-group-text">@</div>
-      </div>
-      <input type="text" name="username" class="form-control" id="create-user-form-username" placeholder="Username">
-    </div>
-
-    <div class="form-check mb-2 mr-sm-2">
-      <input class="form-check-input" type="checkbox" id="inlineFormCheck">
-      <label class="form-check-label" for="inlineFormCheck">
-        Remember me
-      </label>
-    </div>
-
-    <button type="submit" class="btn btn-primary mb-2">Submit</button>
-  </form>
-
-  <!-- Update Progress
-  <h5>Add To Library</h5>
-  <div class="card" style="width: 18rem;" id="create-annotation-form">
-    <img class="card-img-top" src="..." alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.
-      </p>
-      <button type="submit" class="btn btn-primary mb-2">Submit</button>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
-  </div> -->
-
-
-  <!--Update Progress -->
-  <h5>Progress</h5>
-  <div class="progress" style="height: 20px;">
-    <div class="progress-bar progress-bar-striped bg-info" id="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0"
-      aria-valuemax="100">25%</div>
   </div>
-  <form id="update-progress-form">
-    <div class="form-group">
-      <label for="page">Current Page</label>
-      <input type="text" name="page" class="form-control" id="page" placeholder="Current Page">
+<!-- Main Body -->
+  <div class="container-fluid" style="margin-top:10px">
+    <div class="row">
+<!-- Side Bar -->
+    <div class="col-sm-2" id="collection_sidebar"> 
+        <ul class="list-group" id="currently_reading">
+            <h5>Currently Reading</h5>
+        </ul>
+        <ul class="list-group" id="queue">
+            <h5>Queue</h5>
+        </ul>
+        <ul class="list-group" id="queue">
+            <h5>Finished Reading</h5>    
+        </ul>
     </div>
-    <div class="form-group">
-      <label for="name="page"">Comments</label>
-      <textarea class="form-control" name="comments" id="name="page"" rows="3"></textarea>
+<!-- Section for Annotation Form -->
+    <div class="col-sm-5" id="annotation_form">
+      <h5 class="card-title" id="book_title">"The more that you read, the more things you will know. The more that you learn, the more places you’ll go,"</h5>
+<!----------------- Add JS to update Book Title text ----------------->
+      <h6 class="card-title" id="book_author">-Dr.Seuss</h6>
+<!----------------- Add JS to update Author text ----------------->
+<img class="card-img-top" src="https://offloadmedia.feverup.com/secretnyc.co/wp-content/uploads/2020/04/10103804/Dolly-Parton.jpg" alt="Card image" style="width:50%">
+        <div class="card" style="width:400px" id="book_cover">
+<!----------------- Add JS to add book cover image ----------------->  
+            <div class="card-body" id="book_description">
+              <p class="card-text">"Sleep is good...and books are better."</p>
+<!----------------- Add JS to update book description text -----------------> 
+            </div>
+        </div>
+        <h5>Reading Progress</h5>
+        <div class="progress" id="progress_bar_div">
+<!----------------- Add JS to add progress bar ----------------->  
+        </div>
+        <div class="form-group">
+            <label for="page_number">Page Number:</label>
+            <input type="text" class="form-control" placeholder="Enter Page Number" id="page_number">
+          </div>
+          <div class="form-group">
+            <label for="comment">Comment:</label>
+            <textarea class="form-control" rows="5" placeholder="Enter Notes Here" id="comment"></textarea>
+          </div>
+          <button type="button" class="btn btn-success">Submit</button>   
     </div>
-  </form>
+<!-- Section for Annotation Feed -->
+    <div class="col-sm-5">
+        <h5>Activity Feed</h5>
+          <div class="p-3 bg-white mt-2 rounded" id="annotation_feed">
+<!----------------- Add JS to add annotations ----------------->
+        </div>
+    </div>
 
-  <!-- Optional JavaScript -->
-  <script src="index.js" async defer ></script>
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
 </body>
-
 </html>
