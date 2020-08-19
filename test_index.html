@@ -26,7 +26,7 @@
             <span class="navbar-brand mb-0 h1">ReadMe</span>
         </div>
     <ul class="nav navbar-nav navbar-right">
-        <button type="button" class="btn btn-default navbar-btn"> Sign In </button>
+        <button type="button" class="btn btn-default navbar-btn" id="sign_in_button"> Sign In </button>
     </ul>
     </div>
   </nav>
@@ -38,18 +38,42 @@
           <a data-toggle="collapse" href="#collapse1">Add A Book</a>
         </h4>
     </div>
-    <div id="collapse1" class="panel-collapse collapse">
-        <form class="form-inline" id="login-user-form">
+    <div id="collapse1" class="panel-collapse collapse cborder">
+        <form class="form-inline" id="book_search">
             <div class="form-group">
-                <label for="title">Book Title:</label>
-                <input type="text" class="form-control" id="book_title">
-              </div>
-              <div class="form-group">
-                <label for="author">Author:</label>
-                <input type="text" class="form-control" id="book_author">
-              </div>  
+                <label for="book">Search Book</label>
+                <input type="text" class="form-control" placeholder="Book Title and Author" id="book_search">
+              </div> 
               <button type="submit" class="btn btn-default">Search</button>
-        </form> 
+        </form>
+        <ul class="list-group list-group-flush" id="book_search_results">
+            <li class="list-group-item">
+                <div class="card" style="width: 1000px;">
+                    <div class="row no-gutters">
+                        <div class="col-sm-5">
+                            <img class="card-img" src="http://books.google.com/books/content?id=ia7xAwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api" alt="Book Cover">
+                        </div>
+                        <div class="col-sm-16">
+                            <div class="card-body">
+                                <h5 class="card-title">Book Title</h5>
+                                <h6 class="card-title">Author</h6>
+                                <p class="card-text">Join the Cat in the Hat as he makes learning to read a joy! It’s a rainy day and Dick and Sally can’t find anything to do . . . until the Cat in the Hat unexpectedly appears and turns their dreary afternoon into a fun-filled extravaganza! This beloved Beginner Book by Dr. Seuss, which also features timeless Dr. Seuss characters such as Fish and Thing 1 and Thing 2, is fun to read aloud and easy to read alone. Written using 236 different words that any first or second grader can read, it’s a fixture in home and school libraries and a favorite among parents, beginning readers, teachers, and librarians. Originally created by Dr. Seuss, Beginner Books encourage children to read all by themselves, with simple words and illustrations that give clues to their meaning. This Read & Listen edition contains audio narration.</p>
+                                <a class="btn btn-info pull-right">Add Book</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item">Second item</li>
+            <li class="list-group-item">Third item</li>
+            <li class="list-group-item">Fourth item</li>
+            <li class="list-group-item">Fifth item</li>
+            <li class="list-group-item">Sixth item</li>
+            <li class="list-group-item">Seventh item</li>
+            <li class="list-group-item">Eighth item</li>
+            <li class="list-group-item">Ninth item</li>
+            <li class="list-group-item">Tenth item</li>
+        </ul> 
 <!-- Add JS to show results when Search button is clicked --> 
     </div>
   </div>
@@ -69,11 +93,20 @@
         </ul>
     </div>
 <!-- Section for Annotation Form -->
-    <div class="col-sm-5" id="classrooms">
+    <div class="col-sm-5" id="annotation_form">
         Annotation Form
-        <div class="fakeimg" id="book_image">Book Cover</div>
-        <h5>Book Title</h5>
-        <h6>Author</h6>
+        <div class="card" style="width:400px">
+            <img class="card-img-top" src="http://books.google.com/books/content?id=3MKyDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api" alt="Card image" style="width:100%">
+            <div class="card-body">
+              <h5 class="card-title">Book Title</h5>
+              <h6 class="card-title">Author</h6>
+              <p class="card-text">The special anniversary edition of The Little Engine That Could™ contains the entire text and original artwork. Young readers, as well as parents and grandparents, will treasure the story of the blue locomotive who exemplifies the power of positive thinking.</p>
+            </div>
+        </div>
+        <h5>Reading Progress</h5>
+        <div class="progress" id="progress_bar_div">
+            <div class="progress-bar" id="progress_bar" style="width:25%">25%</div>
+        </div>
         <div class="form-group">
             <label for="page_number">Page Number:</label>
             <input type="text" class="form-control" placeholder="Enter Page Number" id="page_number">
@@ -82,25 +115,57 @@
             <label for="comment">Comment:</label>
             <textarea class="form-control" rows="5" placeholder="Enter Notes Here" id="comment"></textarea>
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>   
+          <button type="button" class="btn btn-success">Submit</button>   
     </div>
-<!-- Section for Progress Bar and Annotation Feed -->
-    <div class="col-sm-5" id="grade_table">
-        Progress Bar & Activity Feed
-        <div class="fakeimg" id="book_image">Book Cover</div>
-        <h5>Book Title</h5>
-        <h6>Author</h6>
-        <h5>Reading Progress</h5>
-        <div class="progress">
-            <div class="progress-bar" id="progress bar" style="width:25%">25%</div>
-        </div>
+<!-- Section for Annotation Feed -->
+    <div class="col-sm-5" id="annotation_feed">
+        
         <h5>Activity Feed</h5>
           <div class="p-3 bg-white mt-2 rounded">
             <div class="d-flex justify-content-between" id="activity_feed">
-                <div class="comment-text text-justify mt-2">
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                <div class="comment-text text-justify mt-2" id="annotations">
+                    <div class="d-flex flex-column ml-2">
+                        <span class="font-weight-bold">Page Number: 15</span>
+                        <br>
+                        <span class="day">2 days ago</span>
+                        <br>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-end align-items-center comment-buttons mt-2 text-right"><span class="mr-3 delete">Delete</span><button class="btn btn-success btn-sm border-0 px-3" type="button">Edit</button></div>
+                <div class="d-flex justify-content-end align-items-center comment-buttons mt-2 text-right">
+                    <button type="button" class="btn btn-danger" id="delete_annotation">Delete</button>
+                    <button type="button" class="btn btn-primary" id="edit_annotation">Edit</button>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between" id="activity_feed">
+                <div class="comment-text text-justify mt-2" id="annotations">
+                    <div class="d-flex flex-column ml-2">
+                        <span class="font-weight-bold">Page Number: 15</span>
+                        <br>
+                        <span class="day">2 days ago</span>
+                        <br>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end align-items-center comment-buttons mt-2 text-right">
+                    <button type="button" class="btn btn-danger" id="delete_annotation">Delete</button>
+                    <button type="button" class="btn btn-primary" id="edit_annotation">Edit</button>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between" id="activity_feed">
+                <div class="comment-text text-justify mt-2" id="annotations">
+                    <div class="d-flex flex-column ml-2">
+                        <span class="font-weight-bold">Page Number: 15</span>
+                        <br>
+                        <span class="day">2 days ago</span>
+                        <br>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end align-items-center comment-buttons mt-2 text-right">
+                    <button type="button" class="btn btn-danger" id="delete_annotation">Delete</button>
+                    <button type="button" class="btn btn-primary" id="edit_annotation">Edit</button>
+                </div>
             </div>
         </div>
     </div>

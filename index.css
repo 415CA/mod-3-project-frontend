@@ -1,4 +1,15 @@
-.row>div {
+/*don't remember what this was for*/ 
+
+/*.row>div {
     background: lightgrey;
     border: 1px solid grey;
-  }
+  }*/
+
+
+/* possible way to collapse search results once a Book has been added from results
+Googled 'closing collapse panel after clicking on buton javascript
+got it from this StackOverflow https://stackoverflow.com/questions/33059094/my-bootstrap-collapse-isnt-toggling-and-closing-correctly-on-a-button-click */ 
+  /*$(document).on("click", ".cancel-student-button", function() {
+    var collapse = $(this).closest(".collapse");
+    $(collapse).collapse('toggle');
+  });*/
