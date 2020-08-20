@@ -40,26 +40,20 @@ const handleLoginForm = (evt) => {
   fetch(`${BASE_URL}${BOOK_PATH}`)
     .then((response) => response.json())
     .then((bookArray) => {
-      debugger
       clearScreen();
       bookArray.forEach((book) => {
-        debugger
         console.log('hi');
         showBookDetails(book);
       });
     });
-
 };
 
 const fetchLibrary = () => {
-
   fetch(`${BASE_URL}${USER_PATH}/1`)
     .then((response) => response.json())
     .then((user) => {
-      debugger
       clearScreen();
       user.books.forEach((book) => {
-        debugger
         console.log('hi');
         showBookDetails(book);
       });
@@ -162,12 +156,12 @@ const googleBookHTML = (book) => {
   const author = document.createElement('input');
   author.id = 'author';
   author.name = 'author';
-  author.value = book.volumeInfo.author;
+  author.value = book.volumeInfo.authors;
   author.type = 'hidden';
 
-  // const authorLabel = document.createElement('label');
-  // authorLabel.for = author;
-  // authorLabel.innerText = book.volumeInfo.author;
+  const authorLabel = document.createElement('label');
+  authorLabel.for = author;
+  authorLabel.innerText = book.volumeInfo.authors;
 
   const description = document.createElement('input');
   description.id = 'description';
@@ -235,8 +229,9 @@ const googleBookHTML = (book) => {
     breakPoint,
     title,
     titleLabel,
+    breakPoint,
     author,
-    // authorLabel,
+    authorLabel,
     description,
     descriptionLabel,
     pageCount,
@@ -294,7 +289,8 @@ const googleBookHTML = (book) => {
 
 const showBookDetails = (book) => {
   const bookInfo = createBookHTML(book);
-  dashboardDiv.append(bookInfo);
+  const view = viewButton(book);
+  dashboardDiv.append(bookInfo, view);
 };
 
 const createBookHTML = (book) => {
@@ -330,9 +326,9 @@ const createBookHTML = (book) => {
   infoLink.href = book.infoLink;
   infoLink.append(bookCover);
 
-  const viewButton = document.createElement('button');
-  viewButton.innerText = 'View';
-  viewButton.classList.add('btn', 'btn-primary', 'btn-sm', 'mt-0', 'mb-1');
+  // const viewButton = document.createElement('button');
+  // viewButton.innerText = 'View';
+  // viewButton.classList.add('btn', 'btn-primary', 'btn-sm', 'mt-0', 'mb-1');
 
   const deleteButton = document.createElement('button');
   deleteButton.innerText = 'Delete';
@@ -346,22 +342,22 @@ const createBookHTML = (book) => {
     bookAuthor,
     bookPageCount,
     bookDescription,
-    viewButton,
+    // viewButton,
     breakPoint,
     deleteButton
   );
 
   bookDiv.append(infoLink, bookDivBody);
 
-  viewButton.addEventListener('click', (event) => {
-    fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`)
-      .then((response) => response.json())
-      .then((book) => {
-        clearScreen();
-        showBookDetails(book);
-        createAnnotationForm(book);
-      });
-  });
+  // viewButton.addEventListener('click', (event) => {
+  //   fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`)
+  //     .then((response) => response.json())
+  //     .then((book) => {
+  //       clearScreen();
+  //       showBookDetails(book);
+  //       createAnnotationForm(book);
+  //     });
+  // });
 
   deleteButton.addEventListener('click', (event) => {
     fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`, {
@@ -376,6 +372,25 @@ const createBookHTML = (book) => {
   });
 
   return bookDiv;
+};
+
+const viewButton = (book) => {
+
+  const button = document.createElement('button');
+  button.innerText = 'View';
+  button.classList.add('btn', 'btn-primary', 'btn-sm', 'mt-0', 'mb-1');
+
+  button.addEventListener('click', (event) => {
+    fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`)
+      .then((response) => response.json())
+      .then((viewBook) => {
+        clearScreen();
+        showBookDetails(viewBook);
+        createAnnotationForm(viewBook);
+      });
+  });
+
+  return button;
 };
 
 const createAnnotationForm = (book) => {
@@ -457,7 +472,7 @@ const createAnnotationForm = (book) => {
       .then((updatedBook) => {
         clearScreen();
         showBookDetails(updatedBook);
-        createAnnotationForm(updatedBook)
+        createAnnotationForm(updatedBook);
       });
   });
 
@@ -482,7 +497,6 @@ const showAnnotations = (book) => {
 };
 
 const updateProgress = (book) => {
-debugger
   const progressForm = document.createElement('form');
   progressForm.action = 'submit';
 
@@ -511,34 +525,38 @@ debugger
   progressButton.classList.add('btn', 'btn-secondary', 'btn-sm');
   progressButton.type = 'submit';
 
-  progressForm.append(currentProgressLabel,currentProgress, progressButton, progressDiv);
-  
+  progressForm.append(
+    currentProgressLabel,
+    currentProgress,
+    progressButton,
+    progressDiv
+  );
+
   progressForm.addEventListener('submit', (event) => {
     event.preventDefault();
-  
+
     const currentPage = event.target['current-progress'].value;
-  
+
     const attributePatch = {
       current_page: currentPage,
     };
-  
+
     fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`, {
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(attributePatch),
     })
-      .then(response => response.json())
+      .then((response) => response.json())
       .then((updatedBook) => {
         clearScreen();
         showBookDetails(updatedBook);
-        createAnnotationForm(updatedBook)
+        createAnnotationForm(updatedBook);
       });
   });
-  debugger
-  dashboardDiv.append(progressForm);
 
+  dashboardDiv.append(progressForm);
 };
 
 showLoginForm();
