@@ -10,7 +10,8 @@ const dashboardDiv = document.querySelector('#dashboard');
 const mediaDiv = document.querySelector('#media');
 
 const searchForm = document.querySelector('#google-search-form');
-const loginNavBar = document.querySelector('#login-status');
+const mediaBody = document.querySelector('#media-body');
+
 
 const clearScreen = () => {
   dashboardDiv.innerHTML = '';
@@ -289,8 +290,7 @@ const googleBookHTML = (book) => {
 
 const showBookDetails = (book) => {
   const bookInfo = createBookHTML(book);
-  const view = viewButton(book);
-  dashboardDiv.append(bookInfo, view);
+  dashboardDiv.append(bookInfo);
 };
 
 const createBookHTML = (book) => {
@@ -323,12 +323,12 @@ const createBookHTML = (book) => {
   bookCover.classList.add('align-self-center', 'mr-3');
 
   const infoLink = document.createElement('a');
-  infoLink.href = book.infoLink;
+  infoLink.href = book.info_link;
   infoLink.append(bookCover);
 
-  // const viewButton = document.createElement('button');
-  // viewButton.innerText = 'View';
-  // viewButton.classList.add('btn', 'btn-primary', 'btn-sm', 'mt-0', 'mb-1');
+  const viewButton = document.createElement('button');
+  viewButton.innerText = 'View';
+  viewButton.classList.add('btn', 'btn-primary', 'btn-sm', 'mt-0', 'mb-1');
 
   const deleteButton = document.createElement('button');
   deleteButton.innerText = 'Delete';
@@ -342,22 +342,22 @@ const createBookHTML = (book) => {
     bookAuthor,
     bookPageCount,
     bookDescription,
-    // viewButton,
+    viewButton,
     breakPoint,
     deleteButton
   );
 
   bookDiv.append(infoLink, bookDivBody);
 
-  // viewButton.addEventListener('click', (event) => {
-  //   fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`)
-  //     .then((response) => response.json())
-  //     .then((book) => {
-  //       clearScreen();
-  //       showBookDetails(book);
-  //       createAnnotationForm(book);
-  //     });
-  // });
+  viewButton.addEventListener('click', (event) => {
+    fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`)
+      .then((response) => response.json())
+      .then((book) => {
+        clearScreen();
+        showBookDetails(book);
+        createAnnotationForm(book);
+      });
+  });
 
   deleteButton.addEventListener('click', (event) => {
     fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`, {
@@ -374,11 +374,34 @@ const createBookHTML = (book) => {
   return bookDiv;
 };
 
+const deleteButton = (book) => {
+
+  const deleteButton = document.createElement('button');
+  deleteButton.innerText = 'Delete';
+  deleteButton.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-0', 'mb-1');
+
+  deleteButton.addEventListener('click', (event) => {
+    fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`, {
+      method: 'DELETE',
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        clearScreen();
+        fetchLibrary();
+      });
+  });
+
+  return deleteButton;
+};
+
 const viewButton = (book) => {
 
   const button = document.createElement('button');
   button.innerText = 'View';
   button.classList.add('btn', 'btn-primary', 'btn-sm', 'mt-0', 'mb-1');
+
+  mediaBody.append(button);
 
   button.addEventListener('click', (event) => {
     fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`)
@@ -502,18 +525,27 @@ const updateProgress = (book) => {
 
   const progress = (100 * book.current_page) / book.page_count;
 
+  const outsideProgressDiv = document.createElement('div');
+  outsideProgressDiv.classList.add('progress');
+
   const progressDiv = document.createElement('div');
-  progressDiv.classList.add('progress-bar');
-  progressDiv.role = 'progressbar';
-  progressDiv.width = '25%';
-  progressDiv['aria-valuenow'] = progress;
-  progressDiv['aria-valuemin'] = 0;
-  progressDiv['aria-valuemax'] = 100;
+  progressDiv.classList.add('progress-bar', 'w-5');
+  // progressDiv.width = '25%';
+  progressDiv.setAttribute('aria-valuenow', progress);
+  progressDiv.setAttribute('value', progress);
+  progressDiv.setAttribute('aria-valuemin', 0);
+  progressDiv.setAttribute('aria-valuemin', 100);
+  progressDiv.setAttribute('style', `width: ${progress}%`);
+  progressDiv.setAttribute('role', 'progressbar');
+  // progressDiv['aria-valuenow'] = progress;
+  // progressDiv['aria-valuemin'] = 0;
+  // progressDiv['aria-valuemax'] = 100;
   progressDiv.innerText = `${progress}%`;
+  outsideProgressDiv.append(progressDiv);
 
   const currentProgress = document.createElement('input');
-  currentProgress.id = 'current-progress';
-  currentProgress.name = 'current-progress';
+  currentProgress.id = 'progress';
+  currentProgress.name = 'progress';
   currentProgress.placeholder = book.current_page;
 
   const currentProgressLabel = document.createElement('label');
@@ -529,27 +561,28 @@ const updateProgress = (book) => {
     currentProgressLabel,
     currentProgress,
     progressButton,
-    progressDiv
+    outsideProgressDiv
   );
-
+debugger
   progressForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    const currentPage = event.target['current-progress'].value;
+    const currentPage = event.target.progress.value;
 
-    const attributePatch = {
+    const attributes = {
       current_page: currentPage,
     };
-
+debugger
     fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(attributePatch),
+      body: JSON.stringify(attributes),
     })
       .then((response) => response.json())
       .then((updatedBook) => {
+        debugger
         clearScreen();
         showBookDetails(updatedBook);
         createAnnotationForm(updatedBook);
