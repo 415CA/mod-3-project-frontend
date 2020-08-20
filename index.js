@@ -484,19 +484,14 @@ const createAnnotationForm = (book) => {
     })
       .then((response) => response.json())
       .then((updatedAnnotation) => {
-        addAnnotation(updatedAnnotation); 
-        // clearScreen();
-        // showBookDetails(updatedBook);
-        // createAnnotationForm(updatedBook);
+        addAnnotation(updatedAnnotation, book);
       });
   });
 
   return annotationDiv;
 };
 
-
-
-const addAnnotation = (annotation) => {
+const addAnnotation = (annotation, book) => {
 
   const annotationLi = document.createElement('li');
   annotationLi.classList.add('list-group-item');
@@ -504,7 +499,26 @@ const addAnnotation = (annotation) => {
 
   const annotationP = document.createElement('P');
   annotationP.innerText = `${annotation.comment}`;
-  annotationLi.append(annotationP);
+
+  const deleteAnno = document.createElement('button');
+  deleteAnno.innerText = 'Delete';
+  deleteAnno.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-0', 'mb-1');
+
+  deleteAnno.addEventListener('click', (event) => {
+    fetch(`${BASE_URL}${ANNOTATION_PATH}/${annotation.id}`, {
+      method: 'DELETE',
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        clearScreen();
+        showBookDetails(book);
+        createAnnotationForm(book);
+      });
+  });
+
+
+  annotationLi.append(annotationP, deleteAnno);
 
   mediaDiv.append(annotationLi);
 };
@@ -518,9 +532,27 @@ const showAnnotations = (book) => {
     const annotationLi = document.createElement('li');
     annotationLi.classList.add('list-group-item');
     annotationLi.innerText = `Page: ${annotation.page_number}`;
+
     const annotationP = document.createElement('P');
     annotationP.innerText = `${annotation.comment}`;
-    annotationLi.append(annotationP);
+
+    const deleteAnno = document.createElement('button');
+    deleteAnno.innerText = 'Delete';
+    deleteAnno.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-0', 'mb-1');
+
+    deleteAnno.addEventListener('click', (event) => {
+      fetch(`${BASE_URL}${ANNOTATION_PATH}/${annotation.id}`, {
+        method: 'DELETE',
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          console.log(response);
+          clearScreen();
+          showBookDetails(book);
+          createAnnotationForm(book);
+        });
+    });
+    annotationLi.append(annotationP, deleteAnno);
     annotationUl.append(annotationLi);
   });
 
