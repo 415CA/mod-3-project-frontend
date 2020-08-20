@@ -425,15 +425,6 @@ const createAnnotationForm = (book) => {
 
   const annotationFormDiv = document.createElement('div');
 
-  // const progress = book.current_page / book.page_count;
-  // const progressDiv = document.createElement('div');
-  // progressDiv.classList.add('progress');
-
-  // const progressDivBar = document.createElement('div');
-  // progressDivBar.innerHTML = `<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">${progress}%</div>`;
-
-  // progressDivBar.append(progress);
-
   const annotationHeader = document.createElement('h6');
   annotationHeader.innerText = 'Add Annotation';
 
@@ -472,7 +463,7 @@ const createAnnotationForm = (book) => {
 
   annotationFormDiv2.append(annotationLabel, annotationInput, submitButton);
   annotationForm.append(annotationFormDiv, annotationFormDiv2);
-  annotationDiv.append(annotationForm); //progressDivBar,
+  annotationDiv.append(annotationForm);
   updateProgress(book);
   dashboardDiv.append(annotationDiv);
   showAnnotations(book);
@@ -492,15 +483,32 @@ const createAnnotationForm = (book) => {
       body: JSON.stringify(attributes),
     })
       .then((response) => response.json())
-      .then((updatedBook) => {
-        clearScreen();
-        showBookDetails(updatedBook);
-        createAnnotationForm(updatedBook);
+      .then((updatedAnnotation) => {
+        addAnnotation(updatedAnnotation); 
+        // clearScreen();
+        // showBookDetails(updatedBook);
+        // createAnnotationForm(updatedBook);
       });
   });
 
   return annotationDiv;
 };
+
+
+
+const addAnnotation = (annotation) => {
+
+  const annotationLi = document.createElement('li');
+  annotationLi.classList.add('list-group-item');
+  annotationLi.innerText = `Page: ${annotation.page_number}`;
+
+  const annotationP = document.createElement('P');
+  annotationP.innerText = `${annotation.comment}`;
+  annotationLi.append(annotationP);
+
+  mediaDiv.append(annotationLi);
+};
+
 
 const showAnnotations = (book) => {
   const annotationUl = document.createElement('ul');
@@ -530,16 +538,12 @@ const updateProgress = (book) => {
 
   const progressDiv = document.createElement('div');
   progressDiv.classList.add('progress-bar', 'w-5');
-  // progressDiv.width = '25%';
   progressDiv.setAttribute('aria-valuenow', progress);
   progressDiv.setAttribute('value', progress);
   progressDiv.setAttribute('aria-valuemin', 0);
   progressDiv.setAttribute('aria-valuemin', 100);
   progressDiv.setAttribute('style', `width: ${progress}%`);
   progressDiv.setAttribute('role', 'progressbar');
-  // progressDiv['aria-valuenow'] = progress;
-  // progressDiv['aria-valuemin'] = 0;
-  // progressDiv['aria-valuemax'] = 100;
   progressDiv.innerText = `${progress}%`;
   outsideProgressDiv.append(progressDiv);
 
@@ -563,7 +567,6 @@ const updateProgress = (book) => {
     progressButton,
     outsideProgressDiv
   );
-debugger
   progressForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
@@ -572,7 +575,6 @@ debugger
     const attributes = {
       current_page: currentPage,
     };
-debugger
     fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`, {
       method: 'PATCH',
       headers: {
@@ -582,7 +584,6 @@ debugger
     })
       .then((response) => response.json())
       .then((updatedBook) => {
-        debugger
         clearScreen();
         showBookDetails(updatedBook);
         createAnnotationForm(updatedBook);
