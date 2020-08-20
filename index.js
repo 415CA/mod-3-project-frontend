@@ -387,14 +387,14 @@ const createAnnotationForm = (book) => {
 
   const annotationFormDiv = document.createElement('div');
 
-  const progress = book.current_page / book.page_count;
-  const progressDiv = document.createElement('div');
-  progressDiv.classList.add('progress');
+  // const progress = book.current_page / book.page_count;
+  // const progressDiv = document.createElement('div');
+  // progressDiv.classList.add('progress');
 
-  const progressDivBar = document.createElement('div');
-  progressDivBar.innerHTML = `<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">${progress}%</div>`;
+  // const progressDivBar = document.createElement('div');
+  // progressDivBar.innerHTML = `<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">${progress}%</div>`;
 
-  progressDivBar.append(progress);
+  // progressDivBar.append(progress);
 
   const annotationHeader = document.createElement('h6');
   annotationHeader.innerText = 'Add Annotation';
@@ -434,7 +434,8 @@ const createAnnotationForm = (book) => {
 
   annotationFormDiv2.append(annotationLabel, annotationInput, submitButton);
   annotationForm.append(annotationFormDiv, annotationFormDiv2);
-  annotationDiv.append(progressDivBar, annotationForm);
+  annotationDiv.append(annotationForm); //progressDivBar,
+  updateProgress(book);
   dashboardDiv.append(annotationDiv);
   showAnnotations(book);
 
@@ -478,6 +479,66 @@ const showAnnotations = (book) => {
   });
 
   mediaDiv.append(annotationUl);
+};
+
+const updateProgress = (book) => {
+debugger
+  const progressForm = document.createElement('form');
+  progressForm.action = 'submit';
+
+  const progress = (100 * book.current_page) / book.page_count;
+
+  const progressDiv = document.createElement('div');
+  progressDiv.classList.add('progress-bar');
+  progressDiv.role = 'progressbar';
+  progressDiv.width = '25%';
+  progressDiv['aria-valuenow'] = progress;
+  progressDiv['aria-valuemin'] = 0;
+  progressDiv['aria-valuemax'] = 100;
+  progressDiv.innerText = `${progress}%`;
+
+  const currentProgress = document.createElement('input');
+  currentProgress.id = 'current-progress';
+  currentProgress.name = 'current-progress';
+  currentProgress.placeholder = book.current_page;
+
+  const currentProgressLabel = document.createElement('label');
+  currentProgressLabel.for = currentProgress;
+  currentProgressLabel.innerText = 'Update Progress';
+
+  const progressButton = document.createElement('input');
+  progressButton.value = 'Submit';
+  progressButton.classList.add('btn', 'btn-secondary', 'btn-sm');
+  progressButton.type = 'submit';
+
+  progressForm.append(currentProgressLabel,currentProgress, progressButton, progressDiv);
+  
+  progressForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+  
+    const currentPage = event.target['current-progress'].value;
+  
+    const attributePatch = {
+      current_page: currentPage,
+    };
+  
+    fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`, {
+      method: "PATCH",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(attributePatch),
+    })
+      .then(response => response.json())
+      .then((updatedBook) => {
+        clearScreen();
+        showBookDetails(updatedBook);
+        createAnnotationForm(updatedBook)
+      });
+  });
+  debugger
+  dashboardDiv.append(progressForm);
+
 };
 
 showLoginForm();
