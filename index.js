@@ -1,65 +1,126 @@
-// ---------------- STABLE ELEMENTS ---------------- //
-
-// ---------------- CONTAINERS ---------------- //
-
-const dashboard = document.querySelector('#dashboard');
-const clearDashboard = () => {
-  dashboard.innerHTML = '';
-};
-
-// ---------------- Read API URL
 const BASE_URL = 'http://localhost:3000';
 const BOOK_PATH = '/books';
 const USER_PATH = '/users';
 const ANNOTATION_PATH = '/annotations';
+const GOOGLE_BOOKS_API = 'https://www.googleapis.com/books/v1/volumes?q=';
+const googleQuery = (userInput) => userInput.split(' ').join('+');
 
-// ---------------- 3rd Party API URL
-const GOOGLE_BOOKS_API = `https://www.googleapis.com/books/v1/volumes?q=`;
-const googleQuery = (userInput) => {
-  return userInput.split(' ').join('+');
+const sideBarDiv = document.querySelector('#sidebar');
+const dashboardDiv = document.querySelector('#dashboard');
+const mediaDiv = document.querySelector('#media');
+
+const searchForm = document.querySelector('#google-search-form');
+const loginNavBar = document.querySelector('#login-status');
+
+const clearScreen = () => {
+  dashboardDiv.innerHTML = '';
+  mediaDiv.innerHTML = '';
 };
 
-// ---------------- FORMS ---------------- //
+const showLoginForm = () => {
+  // clearScreen();
+  const loginForm = document.createElement('form');
+  loginForm.classList.add('centered');
 
-// ---------------- Login
-const loginForm = document.querySelector('#login-user-form');
+  const submitButton = document.createElement('button');
+  submitButton.type = 'submit';
+  submitButton.className = 'btn btn-primary';
+  submitButton.innerText = 'Library';
 
-// ---------------- Search
-const googleBooksSearchForm = document.querySelector('#google-book-search');
+  loginForm.append(submitButton);
 
+  sideBarDiv.append(loginForm);
 
-// ---------------- FETCH GET METHODS ---------------- //
-
-// ---------------- Users
-const fetchUser = (user) => {
-  // fetch(`${BASE_URL}${USER_PATH}/${user.id}`)
-  fetch(`${BASE_URL}${USER_PATH}`)
-    .then((response) => response.json())
-    .then((user) => console.log(user));
+  loginForm.addEventListener('submit', handleLoginForm);
 };
 
-// ---------------- Google Books API
-const fetchGoogleBooks = (searchValue) => {
-  fetch(`${GOOGLE_BOOKS_API}{${searchValue}}&maxResults=40`)
+const handleLoginForm = (evt) => {
+  evt.preventDefault();
+debugger
+  fetch(`${BASE_URL}${BOOK_PATH}`)
     .then((response) => response.json())
-    .then((googleBooks) => {
-      dashboard.innerHTML = '';
-      googleBooks.items.forEach((item) => displayGoogleBook(item));
+    .then((bookArray) => {
+      clearScreen();
+      debugger
+      bookArray.forEach((book) => {
+        debugger
+        console.log('hi');
+        showBookDetails(book);
+      });
     });
+
 };
 
-// ---------------- Google Books Search Form
-googleBooksSearchForm.addEventListener('submit', (event) => {
+const showUserBooks = (user) => {
+  setSideBar(user);
+  showBooks(user);
+};
+
+const setSideBar = (user) => {
+  sideBarDiv.innerHTML = '';
+
+  const username = document.createElement('p');
+  username.className = 'font-weight-bold text-center';
+  username.innerText = `Logged in as ${user.username}`;
+
+  const logOutButton = document.createElement('button');
+  logOutButton.className = 'btn btn-danger';
+  logOutButton.innerText = 'Logout';
+
+  sideBarDiv.append(username, logOutButton);
+  logOutButton.addEventListener('click', (evt) => {
+    logOut();
+  });
+};
+
+const logOut = () => {
+  sideBarDiv.innerHTML = '';
+  dashboardDiv.innerHTML = '';
+  mediaDiv.innerHTML = '';
+  showLoginForm();
+};
+
+// ------------ SET MAIN CONTAINER AFTER LOGIN ------------
+const showBooks = (user) => {
+  dashboardDiv.innerHTML = '';
+  user.books.forEach((book) => createBookLi(book));
+};
+
+const createBookLi = (book) => {
+  const bookLi = document.createElement('li');
+  bookLi.className =
+    'list-group-item d-flex justify-content-between align-items-center';
+
+  const bookSpan = document.createElement('span');
+  bookSpan.className = 'badge badge-primary badge-pill';
+  bookSpan.innerText = book.annotations.length;
+
+  bookLi.append(book.title, bookSpan);
+
+  sideBarDiv.append(bookLi);
+
+  bookLi.addEventListener('click', (event) => {
+    mediaDiv.innerHTML.innerText = `SHOW ASSIGNMENTS FOR ${book.name}`;
+    console.log(book);
+  });
+};
+
+showLoginForm();
+
+searchForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
   const searchValue = googleQuery(event.target.search.value);
-  fetchGoogleBooks(searchValue);
+
+  fetch(`${GOOGLE_BOOKS_API}{${searchValue}}&maxResults=40`)
+    .then((response) => response.json())
+    .then((googleBooks) => {
+      clearScreen();
+      googleBooks.items.forEach((item) => googleBookHTML(item));
+    });
 });
 
-// ---------------- Google Books Display
-
-const displayGoogleBook = (book) => {
-
+const googleBookHTML = (book) => {
   const bookDiv = document.createElement('div');
   bookDiv.classList.add('div-class');
 
@@ -148,16 +209,16 @@ const displayGoogleBook = (book) => {
   const userNum = document.createElement('input');
   userNum.id = 'user';
   userNum.name = 'user';
-  userNum.value = 3;
+  userNum.value = 1;
   userNum.type = 'hidden';
 
-  const mediaDiv = document.createElement('div');
-  mediaDiv.classList.add('media');
+  const divMedia = document.createElement('div');
+  divMedia.classList.add('media');
 
-  const mediaDivBody = document.createElement('div');
-  mediaDivBody.classList.add('media-body');
+  const divMediaBody = document.createElement('div');
+  divMediaBody.classList.add('media-body');
 
-  mediaDivBody.append(
+  divMediaBody.append(
     breakPoint,
     title,
     titleLabel,
@@ -174,22 +235,16 @@ const displayGoogleBook = (book) => {
     userNum,
     breakPoint,
     libraryButton,
-    breakPoint,
+    breakPoint
   );
 
-  mediaDiv.append(
-    image,
-    imageLabel,
-    mediaDivBody,
-);
-
-  hiddenForm.append(mediaDiv);
+  divMedia.append(image, imageLabel, divMediaBody);
+  hiddenForm.append(divMedia);
   bookDiv.append(hiddenForm);
-  dashboard.append(bookDiv);
+  dashboardDiv.append(bookDiv);
 
   hiddenForm.addEventListener('submit', (event) => {
     event.preventDefault();
-
     const titleNew = event.target.title.value;
     const authorNew = event.target.author.value;
     const descriptionNew = event.target.description.value;
@@ -210,69 +265,184 @@ const displayGoogleBook = (book) => {
       user_id: userIdNew,
     };
 
-    postBook(attributes);
+    fetch(`${BASE_URL}${BOOK_PATH}`, {
+      method: 'POST',
+      headers: { 'Content-type': 'Application/json' },
+      body: JSON.stringify(attributes),
+    })
+      .then((response) => response.json())
+      .then((newBook) => {
+        clearScreen();
+        showBookDetails(newBook);
+        createAnnotationForm(newBook);
+      });
   });
 };
 
-// ---------------- Create Book
-const postBook = (attributes) => {
-  fetch(`${BASE_URL}${BOOK_PATH}`, {
-    method: 'POST',
-    headers: { 'Content-type': 'Application/json' },
-    body: JSON.stringify(attributes),
-  })
-    .then((response) => response.json())
-    .then((newBook) => {
-      debugger
-      clearDashboard();
-      displayBook(newBook);
-
-    });
+const showBookDetails = (book) => {
+  const bookInfo = createBookHTML(book);
+  dashboardDiv.append(bookInfo);
 };
 
-const displayBook = (book) => {
+const createBookHTML = (book) => {
+  const bookObject = book;
+
   const bookDiv = document.createElement('div');
-  bookDiv.classList.add('div-class');
+  bookDiv.classList.add('media');
+
+  const bookDivBody = document.createElement('div');
+  bookDivBody.classList.add('media-body');
 
   const bookTitle = document.createElement('h6');
   bookTitle.innerText = book.title;
-  bookTitle.classList.add('h6-class');
+  bookTitle.classList.add('mt-0', 'mb-1');
 
   const bookAuthor = document.createElement('h6');
   bookAuthor.innerText = `Author: ${book.author}`;
-  bookAuthor.classList.add('h6-class');
+  bookAuthor.classList.add('mt-0', 'mb-1');
 
   const bookDescription = document.createElement('h6');
   bookDescription.innerText = `Description: ${book.description}`;
-  bookDescription.classList.add('h6-class');
+  bookDescription.classList.add('mt-0', 'mb-1');
 
   const bookPageCount = document.createElement('h6');
   bookPageCount.innerText = `Page Count: ${book.page_count}`;
-  bookPageCount.classList.add('h6-class');
+  bookPageCount.classList.add('mt-0', 'mb-1');
 
   const bookCover = document.createElement('img');
-  bookCover.src = book.imageLinks.thumbnail;
+  bookCover.src = book.image;
+  bookCover.classList.add('align-self-center', 'mr-3');
 
   const infoLink = document.createElement('a');
   infoLink.href = book.infoLink;
   infoLink.append(bookCover);
 
-  const libraryButton = document.createElement('button');
-  libraryButton.innerText = 'Add to Library';
-  libraryButton.classList.add('btn', 'btn-secondary', 'btn-sm');
+  const viewButton = document.createElement('button');
+  viewButton.innerText = 'View';
+  viewButton.classList.add('btn', 'btn-primary', 'btn-sm', 'mt-0', 'mb-1');
+
+  const deleteButton = document.createElement('button');
+  deleteButton.innerText = 'Delete';
+  deleteButton.classList.add('btn', 'btn-secondary', 'btn-sm', 'mt-0', 'mb-1');
 
   const breakPoint = document.createElement('br');
 
-  bookDiv.append(
+  bookDivBody.append(
+    breakPoint,
     bookTitle,
     bookAuthor,
     bookPageCount,
-    infoLink,
     bookDescription,
+    viewButton,
     breakPoint,
-    libraryButton,
-    breakPoint,
+    deleteButton
   );
 
-  dashboard.append(bookDiv);
+  bookDiv.append(infoLink, bookDivBody);
+
+  viewButton.addEventListener('click', (event) => {
+    fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`)
+      .then((response) => response.json())
+      .then((book) => {
+        clearScreen();
+        showBookDetails(book);
+        createAnnotationForm(book);
+      });
+  });
+
+  deleteButton.addEventListener('click', (event) => {
+    fetch(`${BASE_URL}${BOOK_PATH}/${book.id}`, {
+      method: 'DELETE',
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        handleLoginForm()
+      });
+  });
+
+  return bookDiv;
+};
+
+const createAnnotationForm = (book) => {
+  const annotationDiv = document.createElement('div');
+  annotationDiv.id = 'annotation-div';
+
+  const annotationForm = document.createElement('form');
+  annotationForm.id = 'annotation-form';
+
+  const annotationFormDiv = document.createElement('div');
+
+  const progress = book.current_page / book.page_count;
+  const progressDiv = document.createElement('div');
+  progressDiv.classList.add('progress');
+
+  const progressDivBar = document.createElement('div');
+  progressDivBar.innerHTML = `<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">${progress}%</div>`;
+
+  progressDivBar.append(progress);
+
+  const annotationHeader = document.createElement('h6');
+  annotationHeader.innerText = 'Add Annotation';
+
+  const currentPageLabel = document.createElement('label');
+  currentPageLabel.for = 'current-page';
+  currentPageLabel.innerText = 'Current Page';
+
+  const currentPageInput = document.createElement('input');
+  currentPageInput.type = 'text';
+  currentPageInput.id = 'current-page';
+  currentPageInput.placeholder = 'Page Number';
+
+  const annotationFormDiv2 = document.createElement('div');
+  annotationFormDiv2.classList.add('form-group');
+
+  const annotationLabel = document.createElement('label');
+  annotationLabel.innerText = 'Annotation';
+
+  const annotationInput = document.createElement('textarea');
+  annotationInput.name = 'annotation';
+  annotationInput.id = 'annotation';
+  annotationInput.rows = 3;
+  annotationInput.classList.add('form-control');
+  annotationInput.placeholder = 'Add Annotation';
+
+  const submitButton = document.createElement('button');
+  submitButton.innerText = 'Submit';
+  submitButton.type = 'submit';
+  submitButton.classList.add('btn', 'btn-primary', 'btn-sm');
+
+  annotationFormDiv.append(
+    annotationHeader,
+    currentPageLabel,
+    currentPageInput
+  );
+
+  annotationFormDiv2.append(annotationLabel, annotationInput, submitButton);
+  annotationForm.append(annotationFormDiv, annotationFormDiv2);
+  annotationDiv.append(progressDivBar, annotationForm);
+  mediaDiv.append(annotationDiv);
+
+  annotationForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const attributes = {
+      book_id: book.id,
+      page_number: event.target['current-page'].value,
+      comment: event.target.annotation.value,
+    };
+    fetch(`${BASE_URL}${ANNOTATION_PATH}`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'Application/json',
+      },
+      body: JSON.stringify(attributes),
+    })
+      .then((response) => response.json())
+      .then((updatedBook) => {
+        clearScreen();
+        showBookDetails(updatedBook);
+      });
+  });
+
+  return annotationDiv;
 };
