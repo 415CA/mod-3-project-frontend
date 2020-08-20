@@ -36,12 +36,12 @@ const showLoginForm = () => {
 
 const handleLoginForm = (evt) => {
   evt.preventDefault();
-debugger
+
   fetch(`${BASE_URL}${BOOK_PATH}`)
     .then((response) => response.json())
     .then((bookArray) => {
-      clearScreen();
       debugger
+      clearScreen();
       bookArray.forEach((book) => {
         debugger
         console.log('hi');
@@ -49,6 +49,21 @@ debugger
       });
     });
 
+};
+
+const fetchLibrary = () => {
+
+  fetch(`${BASE_URL}${USER_PATH}/1`)
+    .then((response) => response.json())
+    .then((user) => {
+      debugger
+      clearScreen();
+      user.books.forEach((book) => {
+        debugger
+        console.log('hi');
+        showBookDetails(book);
+      });
+    });
 };
 
 const showUserBooks = (user) => {
@@ -105,8 +120,6 @@ const createBookLi = (book) => {
   });
 };
 
-showLoginForm();
-
 searchForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
@@ -152,9 +165,9 @@ const googleBookHTML = (book) => {
   author.value = book.volumeInfo.author;
   author.type = 'hidden';
 
-  const authorLabel = document.createElement('label');
-  authorLabel.for = author;
-  authorLabel.innerText = book.volumeInfo.author;
+  // const authorLabel = document.createElement('label');
+  // authorLabel.for = author;
+  // authorLabel.innerText = book.volumeInfo.author;
 
   const description = document.createElement('input');
   description.id = 'description';
@@ -223,7 +236,7 @@ const googleBookHTML = (book) => {
     title,
     titleLabel,
     author,
-    authorLabel,
+    // authorLabel,
     description,
     descriptionLabel,
     pageCount,
@@ -357,7 +370,8 @@ const createBookHTML = (book) => {
       .then((response) => response.json())
       .then((response) => {
         console.log(response);
-        handleLoginForm()
+        clearScreen();
+        fetchLibrary();
       });
   });
 
@@ -421,7 +435,8 @@ const createAnnotationForm = (book) => {
   annotationFormDiv2.append(annotationLabel, annotationInput, submitButton);
   annotationForm.append(annotationFormDiv, annotationFormDiv2);
   annotationDiv.append(progressDivBar, annotationForm);
-  mediaDiv.append(annotationDiv);
+  dashboardDiv.append(annotationDiv);
+  showAnnotations(book);
 
   annotationForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -441,8 +456,28 @@ const createAnnotationForm = (book) => {
       .then((updatedBook) => {
         clearScreen();
         showBookDetails(updatedBook);
+        createAnnotationForm(updatedBook)
       });
   });
 
   return annotationDiv;
 };
+
+const showAnnotations = (book) => {
+  const annotationUl = document.createElement('ul');
+  annotationUl.classList.add('list-group');
+
+  book.annotations.forEach((annotation) => {
+    const annotationLi = document.createElement('li');
+    annotationLi.classList.add('list-group-item');
+    annotationLi.innerText = `Page: ${annotation.page_number}`;
+    const annotationP = document.createElement('P');
+    annotationP.innerText = `${annotation.comment}`;
+    annotationLi.append(annotationP);
+    annotationUl.append(annotationLi);
+  });
+
+  mediaDiv.append(annotationUl);
+};
+
+showLoginForm();
