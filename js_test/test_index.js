@@ -487,5 +487,3 @@ googleBooksSearchForm.addEventListener('submit', (event) => {
 //   progressBar.setAttribute('aria-valuenow', currentProgress);
 //   progressBar.innerText = `${currentProgress}%`;
 // };
-
-
