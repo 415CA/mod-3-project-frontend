@@ -1,4 +1,4 @@
-const BASE_URL = 'http://read-js.herokuapp.com';
+const BASE_URL = 'https://read-js.herokuapp.com';
 const BOOK_PATH = '/books';
 const USER_PATH = '/users';
 const ANNOTATION_PATH = '/annotations';
